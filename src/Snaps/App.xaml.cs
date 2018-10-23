@@ -10,7 +10,7 @@ namespace Snaps
         {
             this.Container = new UnityContainer();
             this.Container.RegisterType<ActiveWindowWatcher>(new ContainerControlledLifetimeManager());
-            this.Container.RegisterType<MainWindow>();
+            this.Container.RegisterType<MainWindow>(new ContainerControlledLifetimeManager());
         }
 
         public IUnityContainer Container { get; }

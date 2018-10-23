@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using Snaps.Native;
 
 namespace Snaps
@@ -35,7 +36,12 @@ namespace Snaps
 
         public void Destroy()
         {
-            Imports.RemoveMenu(this.Holder.Handle, this.Order, this.Position);
+            var removed = Imports.RemoveMenu(this.Holder.Handle, this.Order, this.Position);
+
+            if (removed == false)
+            {
+                Trace.WriteLine($"Failed to remove menus for {this.Id}");
+            }
         }
 
         public bool Click()

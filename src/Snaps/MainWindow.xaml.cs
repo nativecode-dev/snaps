@@ -5,7 +5,7 @@ using Snaps.Native;
 
 namespace Snaps
 {
-    public partial class MainWindow : Window, IObserver<IntPtr>
+    public sealed partial class MainWindow : Window, IObserver<IntPtr>, IDisposable
     {
         private readonly ConcurrentDictionary<IntPtr, MenuHolder>
             menus = new ConcurrentDictionary<IntPtr, MenuHolder>();
@@ -51,14 +51,14 @@ namespace Snaps
                     holder.MenuItems.Add(new MenuItem(holder)
                     {
                         Id = 10001,
-                        Order = count + 1,
+                        Order = count + 2,
                         Text = "Align: Bottom"
                     });
 
                     holder.MenuItems.Add(new MenuItem(holder)
                     {
                         Id = 10002,
-                        Order = count + 1,
+                        Order = count + 3,
                         Text = "Align: Top"
                     });
 
@@ -72,6 +72,16 @@ namespace Snaps
             {
                 //
             }
+        }
+
+        public void Dispose()
+        {
+            foreach (var kvp in this.menus)
+            {
+                kvp.Value.Dispose();
+            }
+
+            this.menus.Clear();
         }
     }
 }
