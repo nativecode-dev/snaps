@@ -1,15 +1,77 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Windows;
+using Snaps.Native;
 
 namespace Snaps
 {
-    /// <summary>
-    ///     Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow : Window, IObserver<IntPtr>
     {
-        public MainWindow()
+        private readonly ConcurrentDictionary<IntPtr, MenuHolder>
+            menus = new ConcurrentDictionary<IntPtr, MenuHolder>();
+
+        public MainWindow(ActiveWindowWatcher watcher)
         {
-            InitializeComponent();
+            this.InitializeComponent();
+            watcher.Windows.Subscribe(this);
+        }
+
+        public void OnCompleted()
+        {
+        }
+
+        public void OnError(Exception error)
+        {
+        }
+
+        public void OnNext(IntPtr value)
+        {
+            if (this.menus.ContainsKey(value))
+            {
+                return;
+            }
+
+            try
+            {
+                var menu = Imports.GetSystemMenu(value, false);
+                var count = Imports.GetMenuItemCount(menu);
+
+                if (count > 0)
+                {
+                    var holder = new MenuHolder(menu);
+
+                    holder.MenuItems.Add(new MenuItem(holder)
+                    {
+                        Id = 10000,
+                        Order = count + 1,
+                        Position = Imports.MF_BYPOSITION | Imports.MF_SEPARATOR,
+                        Text = string.Empty
+                    });
+
+                    holder.MenuItems.Add(new MenuItem(holder)
+                    {
+                        Id = 10001,
+                        Order = count + 1,
+                        Text = "Align: Bottom"
+                    });
+
+                    holder.MenuItems.Add(new MenuItem(holder)
+                    {
+                        Id = 10002,
+                        Order = count + 1,
+                        Text = "Align: Top"
+                    });
+
+                    if (this.menus.TryAdd(menu, holder))
+                    {
+                        holder.Create();
+                    }
+                }
+            }
+            catch
+            {
+                //
+            }
         }
     }
 }

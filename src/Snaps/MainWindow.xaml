@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        
+        <TextBox x:Name="LogLinesDisplay" Height="399" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" Width="772" AcceptsReturn="True" VerticalAlignment="Top" HorizontalAlignment="Left" />
     </Grid>
 </Window>
