@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Windows;
-using Snaps.Native;
+using Snaps.Services;
 
 namespace Snaps
 {
     public sealed partial class MainWindow : Window, IObserver<IntPtr>, IDisposable
     {
-        private readonly ConcurrentDictionary<IntPtr, MenuHolder>
-            menus = new ConcurrentDictionary<IntPtr, MenuHolder>();
+        private readonly ConcurrentDictionary<IntPtr, AppWindowInstance> instances =
+            new ConcurrentDictionary<IntPtr, AppWindowInstance>();
 
         public MainWindow(ActiveWindowWatcher watcher)
         {
             this.InitializeComponent();
             watcher.Windows.Subscribe(this);
+        }
+
+        public void Dispose()
+        {
+            foreach (var kvp in this.instances)
+            {
+                kvp.Value.Dispose();
+            }
+
+            this.instances.Clear();
         }
 
         public void OnCompleted()
@@ -26,62 +36,27 @@ namespace Snaps
 
         public void OnNext(IntPtr value)
         {
-            if (this.menus.ContainsKey(value))
+            var cached = this.instances.ContainsKey(value);
+
+            if (cached)
             {
                 return;
             }
 
-            try
+            if (AppWindowInstance.CreateInstance(value, out var instance) == false)
             {
-                var menu = Imports.GetSystemMenu(value, false);
-                var count = Imports.GetMenuItemCount(menu);
-
-                if (count > 0)
-                {
-                    var holder = new MenuHolder(menu);
-
-                    holder.MenuItems.Add(new MenuItem(holder)
-                    {
-                        Id = 10000,
-                        Order = count + 1,
-                        Position = Imports.MF_BYPOSITION | Imports.MF_SEPARATOR,
-                        Text = string.Empty
-                    });
-
-                    holder.MenuItems.Add(new MenuItem(holder)
-                    {
-                        Id = 10001,
-                        Order = count + 2,
-                        Text = "Align: Bottom"
-                    });
-
-                    holder.MenuItems.Add(new MenuItem(holder)
-                    {
-                        Id = 10002,
-                        Order = count + 3,
-                        Text = "Align: Top"
-                    });
-
-                    if (this.menus.TryAdd(menu, holder))
-                    {
-                        holder.Create();
-                    }
-                }
+                return;
             }
-            catch
+
+            if (this.instances.TryAdd(value, instance))
             {
-                //
+                instance.AddSeparator(10001);
+                instance.AddMenu("Align Top", 10002, AlignTop);
             }
         }
 
-        public void Dispose()
+        private static void AlignTop(AppMenuAction action)
         {
-            foreach (var kvp in this.menus)
-            {
-                kvp.Value.Dispose();
-            }
-
-            this.menus.Clear();
         }
     }
 }

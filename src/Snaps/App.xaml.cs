@@ -21,5 +21,12 @@ namespace Snaps
 
             this.Container.Resolve<MainWindow>().Show();
         }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            this.Container.Dispose();
+
+            base.OnExit(e);
+        }
     }
 }

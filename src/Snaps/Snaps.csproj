@@ -57,6 +57,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Services\AppMenu.cs" />
+    <Compile Include="Services\AppMenuAction.cs" />
+    <Compile Include="Services\AppWindowInstance.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -72,8 +75,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MenuHolder.cs" />
-    <Compile Include="MenuItem.cs" />
     <Compile Include="Native\Imports.cs" />
     <Compile Include="Native\MenuItemInfo.cs" />
     <Compile Include="Native\MIIM.cs" />

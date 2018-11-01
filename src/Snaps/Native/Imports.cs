@@ -34,7 +34,7 @@ namespace Snaps.Native
         public static extern IntPtr GetForegroundWindow();
 
         [DllImport(UserDll)]
-        public static extern uint GetMenuItemCount(IntPtr menu);
+        public static extern int GetMenuItemCount(IntPtr menu);
 
         [DllImport(UserDll)]
         public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
@@ -53,7 +53,7 @@ namespace Snaps.Native
             uint process, uint thread, uint flags);
 
         [DllImport(UserDll)]
-        public static extern uint GetWindowText(IntPtr hWnd, StringBuilder text, uint count);
+        public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, uint count);
 
         [DllImport(UserDll)]
         public static extern bool UnhookWinEvent(IntPtr hook);
