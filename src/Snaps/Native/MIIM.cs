@@ -1,8 +1,8 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace Snaps.Native
+﻿namespace Snaps.Native
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
+
     [Flags]
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public enum MIIM

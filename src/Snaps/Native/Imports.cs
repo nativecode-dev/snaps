@@ -1,9 +1,8 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace Snaps.Native
+﻿namespace Snaps.Native
 {
+    using System;
+    using System.Runtime.InteropServices;
+
     public static class Imports
     {
         public delegate void WinEventDelegate(IntPtr hook, uint eventType, IntPtr hWnd, int @object, int child,
@@ -31,13 +30,7 @@ namespace Snaps.Native
         private const string UserDll = "user32.dll";
 
         [DllImport(UserDll)]
-        public static extern IntPtr GetForegroundWindow();
-
-        [DllImport(UserDll)]
         public static extern int GetMenuItemCount(IntPtr menu);
-
-        [DllImport(UserDll)]
-        public static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
 
         [DllImport(UserDll)]
         public static extern bool InsertMenu(IntPtr menu, uint position, uint flags, uint newItem, string text);
@@ -46,31 +39,10 @@ namespace Snaps.Native
         public static extern bool RemoveMenu(IntPtr menu, uint position, uint flags);
 
         [DllImport(UserDll)]
-        public static extern bool MoveWindow(IntPtr handle, uint x, uint y, uint width, uint height, bool redraw);
-
-        [DllImport(UserDll)]
         public static extern IntPtr SetWinEventHook(uint min, uint max, IntPtr proc, WinEventDelegate @delegate,
             uint process, uint thread, uint flags);
 
         [DllImport(UserDll)]
-        public static extern int GetWindowText(IntPtr hWnd, StringBuilder text, uint count);
-
-        [DllImport(UserDll)]
         public static extern bool UnhookWinEvent(IntPtr hook);
-
-        public static string GetActiveWindowTitle()
-        {
-            const int nChars = 256;
-
-            var buffer = new StringBuilder(nChars);
-            var handle = GetForegroundWindow();
-
-            if (GetWindowText(handle, buffer, nChars) > 0)
-            {
-                return buffer.ToString();
-            }
-
-            return null;
-        }
     }
 }

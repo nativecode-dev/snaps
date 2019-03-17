@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Snaps.Services
+﻿namespace Snaps.Services
 {
+    using System;
+
     public class AppMenuAction : AppMenu
     {
         internal AppMenuAction(IntPtr menuHandle, string name, int id, int order, uint position,

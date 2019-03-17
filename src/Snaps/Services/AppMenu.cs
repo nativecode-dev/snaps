@@ -1,8 +1,10 @@
-﻿using System;
-using Snaps.Native;
-
-namespace Snaps.Services
+﻿namespace Snaps.Services
 {
+    using System;
+    using Native;
+    using WinApi.User32;
+    using WinApi.User32.Experimental;
+
     public class AppMenu : IDisposable
     {
         internal AppMenu(IntPtr menuHandle, string name, int id, int order, uint position)

@@ -5,8 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Snaps"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="Snaps" Height="247.598" Width="436.463" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <TextBox x:Name="LogLinesDisplay" Height="399" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" Width="772" AcceptsReturn="True" VerticalAlignment="Top" HorizontalAlignment="Left" />
+        <TabControl Margin="0">
+            <TabItem Header="General">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Multi-Monitor">
+                <Grid Background="#FFE5E5E5"/>
+            </TabItem>
+            <TabItem Header="Blacklist"/>
+            <TabItem Header="Whitelist"/>
+        </TabControl>
     </Grid>
 </Window>

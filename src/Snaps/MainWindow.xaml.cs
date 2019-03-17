@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Windows;
-using Snaps.Services;
-
-namespace Snaps
+﻿namespace Snaps
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Windows;
+    using Services;
+
     public sealed partial class MainWindow : Window, IObserver<IntPtr>, IDisposable
     {
         private readonly ConcurrentDictionary<IntPtr, AppWindowInstance> instances =
@@ -55,7 +55,7 @@ namespace Snaps
             }
         }
 
-        private static void AlignTop(AppMenuAction action)
+        private static void AlignTop(IntPtr windowHandle, AppMenuAction action)
         {
         }
     }

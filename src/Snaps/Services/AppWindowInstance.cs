@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using Snaps.Native;
-
-namespace Snaps.Services
+﻿namespace Snaps.Services
 {
+    using System;
+    using System.Collections.Generic;
+    using Native;
+    using WinApi.User32;
+    using WinApi.Windows;
+
     public class AppWindowInstance : IDisposable
     {
         public AppWindowInstance(IntPtr windowHandle)
         {
-            this.MenuHandle = Imports.GetSystemMenu(windowHandle, false);
-            this.WindowHandle = windowHandle;
+            this.Window = WindowFactory.CreateWindowFromHandle(windowHandle);
+            this.MenuHandle = User32Methods.GetSystemMenu(this.Window.Handle, false);
         }
 
         protected bool Disposed { get; private set; }
@@ -20,7 +22,7 @@ namespace Snaps.Services
 
         protected IntPtr MenuHandle { get; }
 
-        protected IntPtr WindowHandle { get; }
+        protected NativeWindow Window { get; }
 
         public void Dispose()
         {
@@ -28,10 +30,11 @@ namespace Snaps.Services
             GC.SuppressFinalize(this);
         }
 
-        public void AddMenu(string text, int id, Action<AppMenuAction> callback)
+        public void AddMenu(string text, int id, Action<IntPtr, AppMenuAction> callback)
         {
             var order = this.MenuCount + this.Items.Count + 1;
-            this.Items.Add(new AppMenuAction(this.MenuHandle, text, id, order, Imports.MF_BYPOSITION, callback));
+            this.Items.Add(new AppMenuAction(this.MenuHandle, text, id, order, Imports.MF_BYPOSITION,
+                this.Wrap(callback)));
         }
 
         public void AddSeparator(int id)
@@ -43,7 +46,7 @@ namespace Snaps.Services
 
         public static bool CreateInstance(IntPtr windowHandle, out AppWindowInstance instance)
         {
-            var menuHandle = Imports.GetSystemMenu(windowHandle, false);
+            var menuHandle = User32Methods.GetSystemMenu(windowHandle, false);
             var count = Imports.GetMenuItemCount(menuHandle);
 
             if (count > 0)
@@ -70,8 +73,13 @@ namespace Snaps.Services
 
                 this.Items.Clear();
 
-                Imports.GetSystemMenu(this.WindowHandle, true);
+                User32Methods.GetSystemMenu(this.Window.Handle, true);
             }
+        }
+
+        private Action<AppMenuAction> Wrap(Action<IntPtr, AppMenuAction> callback)
+        {
+            return appMenuAction => callback(this.Window.Handle, appMenuAction);
         }
     }
 }

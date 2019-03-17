@@ -1,9 +1,10 @@
-﻿using System.Windows;
-using Unity;
-using Unity.Lifetime;
-
-namespace Snaps
+﻿namespace Snaps
 {
+    using System.Windows;
+    using Services;
+    using Unity;
+    using Unity.Lifetime;
+
     public partial class App : Application
     {
         public App()

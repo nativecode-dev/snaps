@@ -1,9 +1,9 @@
-﻿using System;
-using System.Reactive.Subjects;
-using Snaps.Native;
-
-namespace Snaps
+﻿namespace Snaps.Services
 {
+    using System;
+    using System.Reactive.Subjects;
+    using Native;
+
     public class ActiveWindowWatcher : IDisposable
     {
         private readonly IntPtr hook;
